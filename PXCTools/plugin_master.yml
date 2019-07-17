@@ -1,0 +1,23 @@
+main: com.pxcnet.pxctools.PXCTools
+name: PXCTools
+version: BUILD_VERSION
+author: ProfX
+description: Tools for PXCNet bukkit servers
+website: http://pxcnet.com
+api-version: 1.14
+
+commands:
+    pxctools:
+        description: View help and version information
+        usage: /pxctools
+        permission: pxctools.admin
+        permission-message: You have no power here!
+    say:
+        description: Broadcast a message to the server
+        usage: /say
+        permission: pxctools.admin
+        ermission-message: You have no power here!
+
+permissions:
+    pxctools.admin:
+        default: op

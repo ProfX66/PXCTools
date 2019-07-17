@@ -1,0 +1,38 @@
+#PXCTools by ProfX
+
+#Command Spy
+#Normal text formatting codes are accepted
+#%player% = PlayerName; %command% = Command
+Format: '&c[&bCMD&c]&7 %player%: &a%command%'
+MultiChatSupport: False
+IgnoreSender: True
+IgnoredCommands:
+  - CommandToIgnore
+
+#Replacement for default say command prefix
+SayFormat: '&7[&d&lPXCNet&7]&6'
+DiscordSRVSupport: False
+DiscordSRVCommand: 'discord bcast %message%'
+DiscordIgnorePattern: '(.*)SERVER RESTARTING IN \d(.*)'
+
+#Percentage Sleep
+SleepFormat: '&7[&dPXCSleep&7]&6'
+SleepPercentage: 50
+CancelMobTargeting: True
+SkippedNightMessage: '&dSlept the night away!'
+SkippedStormMessage: '&dSlept the storm away!'
+LeftNightMessage: 'Sleeping to skip the night &d[&f%sleeping%&d/&f%required%&d]&6!'
+LeftStormMessage: 'Sleeping to skip the storm &d[&f%sleeping%&d/&f%required%&d]&6!'
+
+#Inventory Management
+RestrictInventoryMove: False
+
+#Player Join
+ClearInventory: False
+ShowJoinMessage: False
+JoinMessageText: '&dEnjoy your visit!'
+CommandsToRun:
+  - CommandToRun
+
+#Prints debugging lines to console
+DebugMode: False
