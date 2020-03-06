@@ -21,3 +21,5 @@ commands:
 permissions:
     pxctools.admin:
         default: op
+    pxctools.spy:
+        default: op

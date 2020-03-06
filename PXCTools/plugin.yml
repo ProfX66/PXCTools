@@ -1,6 +1,6 @@
 main: com.pxcnet.pxctools.PXCTools
 name: PXCTools
-version: 1.0.12
+version: 1.0.13
 author: ProfX
 description: Tools for PXCNet bukkit servers
 website: http://pxcnet.com
@@ -20,4 +20,6 @@ commands:
 
 permissions:
     pxctools.admin:
+        default: op
+    pxctools.spy:
         default: op

@@ -268,7 +268,7 @@ public class PXCTools extends JavaPlugin implements Listener {
 		
 		for (Player p : Bukkit.getOnlinePlayers())
 		{
-			if ((p.isOp()) || (p.hasPermission(adminPermission)))
+			if ((p.isOp()) || (p.hasPermission(adminPermission)) || (p.hasPermission("pxctools.spy")))
 			{
 				Boolean skipPlayer = (p == player);
 				if (!ignoreSender) { skipPlayer = false; }
