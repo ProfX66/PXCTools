@@ -13,7 +13,7 @@ IgnoredCommands:
 SayFormat: '&7[&d&lPXCNet&7]&6'
 DiscordSRVSupport: False
 DiscordSRVCommand: 'discord bcast %message%'
-DiscordIgnorePattern: '(.*)SERVER RESTARTING IN \d(.*)'
+DiscordIgnorePattern: '(.*)SERVER (RESTARTING|SHUTTING DOWN) IN \d(.*)'
 
 #Percentage Sleep
 SleepFormat: '&7[&dPXCSleep&7]&6'
@@ -26,10 +26,20 @@ LeftStormMessage: 'Sleeping to skip the storm &d[&f%sleeping%&d/&f%required%&d]&
 
 #Inventory Management
 RestrictInventoryMove: False
+RestrictItemPickup: False
+
+#World Management
+DisableDispensers: False
+
+#Multiverse
+MultiverseSupport: False
+UnloadWorldMsgFormat: '&7[&dCurator&7]&6 Closing unused exhibits...'
+UnloadWorldMsgCountFormat: '&7[&dCurator&7]&6 &d%count%&6 exhibits have been closed until a patron wants to visit again!'
 
 #Player Join
 ClearInventory: False
 ShowJoinMessage: False
+RunOnRespawn: False
 JoinMessageText: '&dEnjoy your visit!'
 CommandsToRun:
   - CommandToRun

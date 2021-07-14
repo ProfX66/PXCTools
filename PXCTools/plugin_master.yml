@@ -4,6 +4,7 @@ version: BUILD_VERSION
 author: ProfX
 description: Tools for PXCNet bukkit servers
 website: http://pxcnet.com
+softdepend: ['Multiverse-Core']
 api-version: 1.14
 
 commands:

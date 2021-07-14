@@ -1,9 +1,10 @@
 main: com.pxcnet.pxctools.PXCTools
 name: PXCTools
-version: 1.0.13
+version: 1.0.14
 author: ProfX
 description: Tools for PXCNet bukkit servers
 website: http://pxcnet.com
+softdepend: ['Multiverse-Core']
 api-version: 1.14
 
 commands:

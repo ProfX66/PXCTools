@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="PXCTools" default="makejar" basedir=".">
-	<property name="version.number" value="1.0.13" />
+	<property name="version.number" value="1.0.14" />
 	<delete file="plugin.yml"/>
 	<copy file="plugin_master.yml" tofile="plugin.yml"/>
 	<replace file="plugin.yml" token="BUILD_VERSION" value="${version.number}" />
