@@ -22,13 +22,18 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -70,7 +75,10 @@ public class PXCTools extends JavaPlugin implements Listener {
 	Boolean discordSupport = false;
 	Boolean restrictInventoryMove = false;
 	Boolean restrictItemPickup = false;
+	Boolean RestrictItemDrop = false;
 	Boolean DisableDispensers = false;
+	Boolean DisableNoteBlockChange = false;
+	Boolean DisableLeafDecay = false;
 	Boolean clearInventory = false;
 	Boolean showJoinMessage = false;
 	Boolean RunOnRespawn = false;
@@ -157,15 +165,21 @@ public class PXCTools extends JavaPlugin implements Listener {
 			//Inventory Management
 			restrictInventoryMove = Boolean.parseBoolean(config.getString("RestrictInventoryMove"));
 			restrictItemPickup = Boolean.parseBoolean(config.getString("RestrictItemPickup"));
+			RestrictItemDrop = Boolean.parseBoolean(config.getString("RestrictItemDrop"));
 			log("---- Inventory Management Setting(s) ----");
 			log(String.format("RestrictInventoryMove: %1s", restrictInventoryMove));
 			log(String.format("RestrictItemPickup: %1s", restrictItemPickup));
+			log(String.format("RestrictItemDrop: %1s", RestrictItemDrop));
 			log(" ");
 			
 			//World Management
 			DisableDispensers = Boolean.parseBoolean(config.getString("DisableDispensers"));
+			DisableNoteBlockChange = Boolean.parseBoolean(config.getString("DisableNoteBlockChange"));
+			DisableLeafDecay = Boolean.parseBoolean(config.getString("DisableLeafDecay"));
 			log("---- World Management Setting(s) ----");
 			log(String.format("DisableDispensers: %1s", DisableDispensers));
+			log(String.format("DisableNoteBlockChange: %1s", DisableNoteBlockChange));
+			log(String.format("DisableLeafDecay: %1s", DisableLeafDecay));
 			log(" ");
 			
 			//Multiverse
@@ -577,30 +591,30 @@ public class PXCTools extends JavaPlugin implements Listener {
 	public void RunPlayerCommand(Player player, String cmd)
 	{
 		Command command = Bukkit.getServer().getPluginCommand(cmd.split(" ")[0].toLowerCase());
-		log("Full command line to run: '" + cmd + "'");
-		log("Command: '" + cmd.split(" ")[0].toLowerCase() + "'");
-		
-		if (command != null)
+		if (debug)
 		{
-			log("Command is valid - Running as player...");
-			player.performCommand(cmd);
+			log("Full command line to run: '" + cmd + "'");
+			log("Command: '" + cmd.split(" ")[0].toLowerCase() + "'");
+			if (command != null) { log("Command is valid - Running as player..."); }
+			else { log("Command is not valid - Skipping..."); }
 		}
-		else { log("Command is not valid - Skipping..."); }
+
+		if (command != null) { player.performCommand(cmd); }
 	}
 	
 	public void RunConsoleCommand(String cmd)
 	{
 		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 		Command command = Bukkit.getServer().getPluginCommand(cmd.split(" ")[0].toLowerCase());
-		log("Full command line to run: '" + cmd + "'");
-		log("Command: '" + cmd.split(" ")[0].toLowerCase() + "'");
-		
-		if (command != null)
+		if (debug)
 		{
-			log("Command is valid - Running as console...");
-			Bukkit.dispatchCommand(console, cmd);
+			log("Full command line to run: '" + cmd + "'");
+			log("Command: '" + cmd.split(" ")[0].toLowerCase() + "'");
+			if (command != null) { log("Command is valid - Running as console..."); }
+			else { log("Command is not valid - Skipping..."); }
 		}
-		else { log("Command is not valid - Skipping..."); }
+
+		if (command != null) { Bukkit.dispatchCommand(console, cmd); }
 	}
 	
 	@EventHandler
@@ -648,6 +662,53 @@ public class PXCTools extends JavaPlugin implements Listener {
 			String itemType = mItem.toString();
 			
 			if (debug) { log("(DBG) Block [ " + blockType + " ] at [ " + blockCoords + " ] attempted to dispense [ " + itemType + " ]"); }
+			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void ItemDrop(PlayerDropItemEvent event)
+	{
+		if (RestrictItemDrop)
+		{
+			Player player = event.getPlayer();
+			Boolean hasPermission = (player.isOp()) || (player.hasPermission(adminPermission));
+	    	if (!hasPermission)
+	    	{
+	    		if (debug) { log("(DBG) Entity [ " + player.getName() + " ] attempted to drop an item."); }
+	    		event.setCancelled(true);
+	    	}
+		}
+	}
+	
+	@EventHandler
+	public void StopNoteBlockChange(PlayerInteractEvent event)
+	{
+		if (DisableNoteBlockChange)
+		{
+			Action action = event.getAction();
+			if (action.equals(Action.LEFT_CLICK_AIR) || action.equals(Action.LEFT_CLICK_BLOCK) || action.equals(Action.RIGHT_CLICK_AIR))
+				return;
+			
+			Player player = event.getPlayer();
+			Boolean hasPermission = (player.isOp()) || (player.hasPermission(adminPermission));
+	    	if (!hasPermission)
+	    	{
+				Material block = event.getClickedBlock().getType();
+				if (action.equals(Action.RIGHT_CLICK_BLOCK) && block.equals(Material.NOTE_BLOCK))
+				{
+					if (debug) { log("(DBG) Entity [ " + player.getName() + " ] attempted to change a noteblock."); }
+		    		event.setCancelled(true);
+				}
+	    	}
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onLeavesDecay(LeavesDecayEvent event)
+	{
+		if (DisableLeafDecay)
+		{
 			event.setCancelled(true);
 		}
 	}

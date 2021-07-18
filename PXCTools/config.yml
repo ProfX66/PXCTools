@@ -27,9 +27,12 @@ LeftStormMessage: 'Sleeping to skip the storm &d[&f%sleeping%&d/&f%required%&d]&
 #Inventory Management
 RestrictInventoryMove: False
 RestrictItemPickup: False
+RestrictItemDrop: False
 
 #World Management
 DisableDispensers: False
+DisableNoteBlockChange: False
+DisableLeafDecay: False
 
 #Multiverse
 MultiverseSupport: False
